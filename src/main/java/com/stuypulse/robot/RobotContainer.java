@@ -5,6 +5,14 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.Intake.IntakePosition.IntakeSetPositionDown;
+import com.stuypulse.robot.commands.Intake.IntakePosition.IntakeSetPositionStop;
+import com.stuypulse.robot.commands.Intake.IntakePosition.IntakeSetPositionUp;
+import com.stuypulse.robot.commands.Intake.IntakeState.IntakeSetStateIntake;
+import com.stuypulse.robot.commands.Intake.IntakeState.IntakeSetStateOutake;
+import com.stuypulse.robot.commands.Intake.IntakeState.IntakeSetStateStow;
+import com.stuypulse.robot.commands.Intake.SuperStructureIntake;
+import com.stuypulse.robot.commands.Intake.SuperStructureStow;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.stuylib.input.Gamepad;
@@ -43,7 +51,19 @@ public class RobotContainer {
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+
+        //Sim values are not accurate but prove that it works
+        
+        driver.getLeftButton().whileTrue(new IntakeSetStateIntake()).whileFalse(new IntakeSetStateStow()); //KEYBIND: Button 1
+        driver.getBottomButton().whileTrue(new IntakeSetStateOutake()).whileFalse(new IntakeSetStateStow()); //KEYBIND: Button 2
+
+        driver.getRightButton().whileTrue(new IntakeSetPositionUp()).whileFalse(new IntakeSetPositionStop()); //KEYBIND: Button 3
+        driver.getTopButton().whileTrue(new IntakeSetPositionDown()).whileFalse(new IntakeSetPositionStop()); //KEYBIND: Button 4
+
+        driver.getLeftBumper().whileTrue(new SuperStructureIntake()).whileFalse(new SuperStructureStow()); //KEYBIND: Button 5
+        
+    }
 
     /**************/
     /*** AUTONS ***/

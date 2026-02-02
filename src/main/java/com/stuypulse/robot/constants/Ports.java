@@ -12,4 +12,10 @@ public interface Ports {
         int OPERATOR = 1;
         int DEBUGGER = 2;
     }
+
+    public interface Intake {
+        int LEADER_MOTOR = 3; //TODO: update ports
+        int FOLLOWER_MOTOR = 4;
+        int POSITIONAL_MOTOR = 5;
+    }
 }

@@ -32,6 +32,26 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
  */
 public interface Motors {
 
+    public interface INTAKE { 
+        //TOOD: add anything that is neccessary!! -> not entirely finished
+
+        TalonFXConfig LEADER_MOTOR = new TalonFXConfig()
+        .withCurrentLimitAmps(0) //TODO: add to settings
+        .withInvertedValue(InvertedValue.Clockwise_Positive)
+        .withNeutralMode(NeutralModeValue.Coast);
+
+        TalonFXConfig FOLLOWER_MOTOR = new TalonFXConfig()
+        .withCurrentLimitAmps(0) //TODO: add to settings
+        .withInvertedValue(InvertedValue.Clockwise_Positive) //TODO: !!! comment out if doesn't work as is. I set it as Motor Alignment oppsed when setting control to new Follower...
+        .withNeutralMode(NeutralModeValue.Coast);
+
+        TalonFXConfig POSITIONAL_MOTOR = new TalonFXConfig()
+        .withCurrentLimitAmps(0) //TODO: add to settings
+        .withInvertedValue(InvertedValue.Clockwise_Positive)
+        .withNeutralMode(NeutralModeValue.Coast)
+        .withPIDConstants(0, 0, 0, 0); //TODO: add to gains
+    }
+
     /** Classes to store all of the values a motor needs */
 
     public static class TalonFXConfig {
