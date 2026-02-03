@@ -26,10 +26,10 @@ public class IntakeImpl extends Intake {
 
     @Override 
     public void periodic() {
-        ROLLER_MOTOR_LEADER.setControl(new DutyCycleOut(getIntakeState().getDutyCycle()));
+        ROLLER_MOTOR_LEADER.setControl(new DutyCycleOut(getIntakeState().getDutyCycle().get()));
         ROLLER_MOTOR_FOLLOWER.setControl(new Follower(Ports.Intake.LEADER_MOTOR, MotorAlignmentValue.Opposed));
 
-        ROLLER_POSITION_MOTOR.setControl(new DutyCycleOut(getIntakePosition().getSpeed())); //TODO: !! change from dutycycle potentially later on
+        ROLLER_POSITION_MOTOR.setControl(new DutyCycleOut(getIntakePosition().getSpeed().get())); //TODO: !! change from dutycycle potentially later on
         //TODO: !! update the POSITION MOTOR for MOTION MAGIC type of value
 
         //TODO: add SmartDashboard stuff

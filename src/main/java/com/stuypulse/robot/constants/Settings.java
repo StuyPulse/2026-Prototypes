@@ -5,7 +5,6 @@
 
 package com.stuypulse.robot.constants;
 
-import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 /*-
@@ -16,12 +15,12 @@ import com.stuypulse.stuylib.network.SmartNumber;
  */
 public interface Settings {
     public interface Intake { //TODO: !! Make suppliers and Smart numbers so that it can be edited through glass
-        static double INTAKE = 1;
-        static double STOW = 0;
-        static double OUTTAKE = -1; //TODO: remove if we aren't doing outtake
+        static SmartNumber INTAKE = new SmartNumber("INTAKE/ SETTINGS ROLLER/ INTAKE (CHANGEABLE)", 1);
+        static SmartNumber STOW = new SmartNumber("INTAKE/ SETTINGS ROLLER/ STOW (CHANGEABLE)", 0);
+        static SmartNumber OUTTAKE = new SmartNumber("INTAKE/ SETTINGS ROLLER/ OUTTAKE (CHANGEABLE)", -1); //TODO: remove if we aren't doing outtake
 
-        static double UP = 1; //TODO: update values
-        static double DOWN = -1; //TODO: update values
-        static double STOP = 0;
+        static SmartNumber UP = new SmartNumber("INTAKE/ SETTINGS POSITIONAL/ UP (CHANGEABLE)", 1); //TODO: update values
+        static SmartNumber DOWN = new SmartNumber("INTAKE/ SETTINGS POSITIONAL/ DOWN (CHANGEABLE)", -1);  //TODO: update values
+        static SmartNumber STOP = new SmartNumber("INTAKE/ SETTINGS POSITIONAL/ STOP (CHANGEABLE)", 0); 
     }
 }

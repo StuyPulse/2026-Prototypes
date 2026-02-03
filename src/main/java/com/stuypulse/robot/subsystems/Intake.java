@@ -1,5 +1,7 @@
 package com.stuypulse.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,33 +18,33 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeState {
-        INTAKE(Settings.Intake.INTAKE), //TODO: add to settings
-        OUTTAKE(Settings.Intake.OUTTAKE),
-        STOW(Settings.Intake.STOW);
+        INTAKE(() -> Settings.Intake.INTAKE.get()), //TODO: add to settings
+        OUTTAKE(() -> Settings.Intake.OUTTAKE.get()),
+        STOW(() -> Settings.Intake.STOW.get());
 
-        private double dutyCycle;
+        private Supplier<Double> dutyCycle;
 
-        private IntakeState(double dutyCycle) {
+        private IntakeState(Supplier<Double> dutyCycle) {
             this.dutyCycle = dutyCycle;
         }
 
-        public double getDutyCycle() {
+        public Supplier<Double> getDutyCycle() {
             return dutyCycle;
         }
     }
 
     public enum IntakePosition {
-        UP(Settings.Intake.UP),
-        DOWN(Settings.Intake.DOWN),
-        STOP(Settings.Intake.STOP);
+        UP(() -> Settings.Intake.UP.get()),
+        DOWN(() -> Settings.Intake.DOWN.get()),
+        STOP(() -> Settings.Intake.STOP.get());
 
-        private double speed; //TODO: update variable name when using PID controller and etc
+        private Supplier<Double> speed; //TODO: update variable name when using PID controller and etc
 
-        private IntakePosition(double speed) {
+        private IntakePosition(Supplier<Double> speed) {
             this.speed = speed;
         }
 
-        public double getSpeed() {
+        public Supplier<Double> getSpeed() {
             return speed;
         }
     }
