@@ -2,15 +2,21 @@ package com.stuypulse.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Intake extends SubsystemBase {
+public abstract class Intake extends SubsystemBase {
     private static final Intake instance;
 
     static {
-        instance = new IntakeImpl();
+        if(Robot.isReal()) {
+            instance = new IntakeImpl();
+        }
+        else {
+            instance = new IntakeSim();
+        }
     }
 
     public static Intake getInstance() {
@@ -35,17 +41,16 @@ public class Intake extends SubsystemBase {
 
     public enum IntakePosition {
         UP(() -> Settings.Intake.UP.get()),
-        DOWN(() -> Settings.Intake.DOWN.get()),
-        STOP(() -> Settings.Intake.STOP.get());
+        DOWN(() -> Settings.Intake.DOWN.get());
 
-        private Supplier<Double> speed; //TODO: update variable name when using PID controller and etc
+        private Supplier<Double> targetAngle; //TODO: update variable name when using PID controller and etc
 
-        private IntakePosition(Supplier<Double> speed) {
-            this.speed = speed;
+        private IntakePosition(Supplier<Double> targetAngle) {
+            this.targetAngle = targetAngle;
         }
 
-        public Supplier<Double> getSpeed() {
-            return speed;
+        public Supplier<Double> getTargetAngle() {
+            return targetAngle;
         }
     }
 
@@ -53,7 +58,7 @@ public class Intake extends SubsystemBase {
     IntakeState state;
 
     protected Intake() {
-        position = IntakePosition.STOP;
+        position = IntakePosition.UP;
         state = IntakeState.STOW;
     }
 
@@ -72,5 +77,7 @@ public class Intake extends SubsystemBase {
     public void setIntakeState(IntakeState state) {
         this.state = state;
     }
+
+    //public abstract Supplier<Rotation2d> getTargetRotations();
 
 }

@@ -38,18 +38,18 @@ public interface Motors {
         TalonFXConfig LEADER_MOTOR = new TalonFXConfig()
         .withCurrentLimitAmps(0) //TODO: add to settings
         .withInvertedValue(InvertedValue.Clockwise_Positive)
-        .withNeutralMode(NeutralModeValue.Coast);
+        .withNeutralMode(NeutralModeValue.Brake);
 
         TalonFXConfig FOLLOWER_MOTOR = new TalonFXConfig()
         .withCurrentLimitAmps(0) //TODO: add to settings
         .withInvertedValue(InvertedValue.Clockwise_Positive) //TODO: !!! comment out if doesn't work as is. I set it as Motor Alignment oppsed when setting control to new Follower...
-        .withNeutralMode(NeutralModeValue.Coast);
+        .withNeutralMode(NeutralModeValue.Brake);
 
         TalonFXConfig POSITIONAL_MOTOR = new TalonFXConfig()
         .withCurrentLimitAmps(0) //TODO: add to settings
         .withInvertedValue(InvertedValue.Clockwise_Positive)
-        .withNeutralMode(NeutralModeValue.Coast)
-        .withPIDConstants(0, 0, 0, 0); //TODO: add to gains
+        .withNeutralMode(NeutralModeValue.Brake)
+        .withPIDConstants(Gains.Intake.kP.getAsDouble(), Gains.Intake.kI.getAsDouble(), Gains.Intake.kD.getAsDouble(), 0); //TODO: add to gains
     }
 
     /** Classes to store all of the values a motor needs */

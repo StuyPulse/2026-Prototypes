@@ -1,12 +1,18 @@
 package com.stuypulse.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.stuylib.math.SLMath;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeImpl extends Intake {
@@ -24,12 +30,20 @@ public class IntakeImpl extends Intake {
         Motors.INTAKE.POSITIONAL_MOTOR.configure(ROLLER_POSITION_MOTOR);
     }
 
+    public Supplier<Rotation2d> getTargetRotations() {
+        return () -> Rotation2d.fromDegrees(
+            SLMath.clamp(
+                getIntakePosition().getTargetAngle().get(),
+                Constants.Intake.INTAKE_POSITIONAL_MIN_ANGLE,
+                Constants.Intake.INTAKE_POSITIONAL_MAX_ANGLE));
+    }
+
     @Override 
     public void periodic() {
         ROLLER_MOTOR_LEADER.setControl(new DutyCycleOut(getIntakeState().getDutyCycle().get()));
         ROLLER_MOTOR_FOLLOWER.setControl(new Follower(Ports.Intake.LEADER_MOTOR, MotorAlignmentValue.Opposed));
 
-        ROLLER_POSITION_MOTOR.setControl(new DutyCycleOut(getIntakePosition().getSpeed().get())); //TODO: !! change from dutycycle potentially later on
+        ROLLER_POSITION_MOTOR.setControl(new MotionMagicVoltage(getTargetRotations().get().getRotations())); //TODO: !! change from dutycycle potentially later on
         //TODO: !! update the POSITION MOTOR for MOTION MAGIC type of value
 
         //TODO: add SmartDashboard stuff
@@ -42,8 +56,10 @@ public class IntakeImpl extends Intake {
         SmartDashboard.putNumber("INTAKE/ROLLER ROLLER/ LEADER CURRENT", ROLLER_MOTOR_LEADER.getSupplyCurrent().getValueAsDouble());
         SmartDashboard.putNumber("INTAKE/ROLLER ROLLER/ FOLLOWER CURRENT", ROLLER_MOTOR_FOLLOWER.getSupplyCurrent().getValueAsDouble());
 
-         SmartDashboard.putNumber("INTAKE/ROLLER POSITIONAL/ POSITIONAL DUTYCYCLE", ROLLER_POSITION_MOTOR.getDutyCycle().getValueAsDouble()); //TODO: !! remove later
+        SmartDashboard.putNumber("INTAKE/ROLLER POSITIONAL/ POSITIONAL DUTYCYCLE", ROLLER_POSITION_MOTOR.getDutyCycle().getValueAsDouble()); //TODO: !! remove later
         SmartDashboard.putNumber("INTAKE/ROLLER POSITIONAL/ POSITIONAL CURRENT", ROLLER_POSITION_MOTOR.getSupplyCurrent().getValueAsDouble());
+
+        SmartDashboard.putNumber("INTAKE/SETTINGS/ getTargetRotations", getTargetRotations().get().getDegrees()); //DEBUGGING TODO: remove later
 
     }
 }

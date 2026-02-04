@@ -6,7 +6,6 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.Intake.IntakePosition.IntakeSetPositionDown;
-import com.stuypulse.robot.commands.Intake.IntakePosition.IntakeSetPositionStop;
 import com.stuypulse.robot.commands.Intake.IntakePosition.IntakeSetPositionUp;
 import com.stuypulse.robot.commands.Intake.IntakeState.IntakeSetStateIntake;
 import com.stuypulse.robot.commands.Intake.IntakeState.IntakeSetStateOutake;
@@ -58,8 +57,8 @@ public class RobotContainer {
         driver.getLeftButton().whileTrue(new IntakeSetStateIntake()).whileFalse(new IntakeSetStateStow()); //KEYBIND: Button 1
         driver.getBottomButton().whileTrue(new IntakeSetStateOutake()).whileFalse(new IntakeSetStateStow()); //KEYBIND: Button 2
 
-        driver.getRightButton().whileTrue(new IntakeSetPositionUp()).whileFalse(new IntakeSetPositionStop()); //KEYBIND: Button 3
-        driver.getTopButton().whileTrue(new IntakeSetPositionDown()).whileFalse(new IntakeSetPositionStop()); //KEYBIND: Button 4
+        driver.getRightButton().onTrue(new IntakeSetPositionUp());//.whileFalse(new IntakeSetPositionStop()); //KEYBIND: Button 3
+        driver.getTopButton().onTrue(new IntakeSetPositionDown());//.whileFalse(new IntakeSetPositionStop()); //KEYBIND: Button 4
 
         driver.getLeftBumper().whileTrue(new SuperStructureIntake()).whileFalse(new SuperStructureStow()); //KEYBIND: Button 5
         

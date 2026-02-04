@@ -46,9 +46,9 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         auto = robot.getAutonomousCommand();
 
-        if (auto != null) {
-            auto.schedule();
-        }
+        // if (auto != null) {
+        //     auto.schedule();
+        // }
     }
 
     @Override
