@@ -20,12 +20,13 @@ public class SimImpl extends Sim{
     MechanismLigament2d turret;
 
     //TODO: (IMPORTANT) MIGHT GO HORRIBLY WRONG AND IF SO, RESET STATICS AT START OF PERIODIC??
-    static boolean useOther;
-
-    static double pidOutput; 
+    static boolean useNegativeMeasurement;
 
     static double positiveAngle;
     static double negativeAngle;
+
+    static double positiveMeasurement;
+    static double negativeMeasurement;
 
     
 
@@ -61,16 +62,44 @@ public class SimImpl extends Sim{
 
     @Override 
     public void periodic() {
-        pidOutput = 0;
         positiveAngle = 0;
         negativeAngle = 0;
-        useOther = false; //reset value each time
+
+        positiveMeasurement = 0;
+        negativeMeasurement = 0;
+        useNegativeMeasurement = false; //reset value each time
         //TODO: add the actual full turn counters, the negatives side counter or something, and just overall make it work.
         SmartDashboard.putData("turret visualizer", canvas);
         
 
-        //LOGIC GOES FROM HERE -> right now at find shortest path
-        // if (getState().getAngle().get() >= ()Math.abs(Math.toDegrees(motor.getAngularPositionRad())) % 360)  { //doesn't work
+        
+        if (getState().getAngle().get() >= getRelativeDegrees())  {
+            positiveAngle = getState().getAngle().get() - getRelativeDegrees();
+            negativeAngle = getState().getAngle().get() - (getRelativeDegrees() + 360);
+
+            positiveMeasurement =  getRelativeDegrees();
+            negativeMeasurement = (getRelativeDegrees() + 360);
+
+            if (positiveAngle > Math.abs(negativeAngle) || (Math.toDegrees(motor.getAngularPositionRad()) + positiveAngle) > 480) { //get their distances
+                if (! ((Math.toDegrees(motor.getAngularPositionRad()) + negativeAngle) < -480)) {
+                    useNegativeMeasurement = true; //Use other refers to negative angle!!!
+                }
+                
+            }
+        }
+        else if (getState().getAngle().get() < getRelativeDegrees()) {
+            positiveAngle = getState().getAngle().get() - (getRelativeDegrees() - 360); //TODO: double check java treats subtraction to a negative as addition
+            negativeAngle = getState().getAngle().get() - getRelativeDegrees();
+
+            positiveMeasurement =  (getRelativeDegrees() - 360);
+            negativeMeasurement = getRelativeDegrees();
+
+            if (positiveAngle > Math.abs(negativeAngle) || (Math.toDegrees(motor.getAngularPositionRad()) + positiveAngle) > 480) { //get their distances
+                if (! ((Math.toDegrees(motor.getAngularPositionRad()) + negativeAngle) < -480)) {
+                    useNegativeMeasurement = true; //Use other refers to negative angle!!!
+                }
+            }
+        }
 
 
         //     positiveAngle = getState().getAngle().get() - getAbsoluteAngularPositionDeg(); //TODO: (IMPORTANT) MIGHT GO HORRIBLY WRONG AND IF SO, RESET STATICS AT START OF PERIODIC??
@@ -107,11 +136,11 @@ public class SimImpl extends Sim{
         //     pidOutput = pidController.calculate(getAbsoluteAngularPositionDeg(), (useOther) ? getAbsoluteAngularPositionDeg() + positiveAngle : getAAPDeg);
         // }    
 
-        
+        double pidOutput = (useNegativeMeasurement) ? pidController.calculate(negativeMeasurement, getState().getAngle().get()) : pidController.calculate(positiveMeasurement, getState().getAngle().get());
         double ffOutput = ffController.calculate(pidController.getSetpoint(), 1); //TODO: update the velocity value
-        double voltage =  getState().getVoltage();      //pidOutput + ffOutput;
+        double voltage =  pidOutput + ffOutput;
         
-        motor.setInputVoltage(voltage /* * getState().getSpeed()*/); //TODO: add this back later 
+        motor.setInputVoltage(voltage * getState().getSpeed()); //TODO: add this back later 
 
         turret.setAngle(Math.toDegrees(motor.getAngularPositionRad()));
 
@@ -120,19 +149,21 @@ public class SimImpl extends Sim{
 
 
         SmartDashboard.putNumber("Turret Simulation/ Sim Values/ Voltage", voltage);
-        SmartDashboard.putNumber("Turret Simulation/ Sim Values/ ACTUAL Motor Position",getDegrees());
+
+        SmartDashboard.putNumber("Turret Simulation/ Sim Values/ UNWRAPPED Motor Position", Math.toDegrees(motor.getAngularPositionRad()));
+        SmartDashboard.putNumber("Turret Simulation/ Sim Values/ WRAPPED Motor Position",getDegrees());
         SmartDashboard.putNumber("Turret Simulation/ Sim Values/ RELATIVE Motor Position", getRelativeDegrees() );
 
         SmartDashboard.putNumber("Turret Simulation/ Sim Values/ Random Angle", getState().getAngle().get());
-        //SmartDashboard.putNumber("Turret Simulation/ Sim Values/ PID output", pidOutput);
-        //SmartDashboard.putNumber("Turret Simulation/ Sim Values/ FF output", ffOutput);
+        SmartDashboard.putNumber("Turret Simulation/ Sim Values/ PID output", pidOutput);
+        SmartDashboard.putNumber("Turret Simulation/ Sim Values/ FF output", ffOutput);
         SmartDashboard.putString("Turret Simulation/ Sim Values/ State", getState().toString());
         SmartDashboard.putNumber("Turret Simulation/ Sim Values/ Speed", getState().getSpeed());
 
-        //SmartDashboard.putNumber("Turret Simulation/ Sim Values/ Positive Angle", positiveAngle);
-        //SmartDashboard.putNumber("Turret Simulation/ Sim Values/ Negative Angle", negativeAngle);
+        SmartDashboard.putNumber("Turret Simulation/ Sim Values/ Positive Angle", positiveAngle);
+        SmartDashboard.putNumber("Turret Simulation/ Sim Values/ Negative Angle", negativeAngle);
 
-        SmartDashboard.putBoolean("Turret Simulation/ Sim Values/ Past limit", (Math.toDegrees(motor.getAngularPositionRad()) + positiveAngle) > 480);
-        SmartDashboard.putBoolean("Turret Simulation/ Sim Values/ Past limit", (Math.toDegrees(motor.getAngularPositionRad()) + negativeAngle) < -480);
+        SmartDashboard.putBoolean("Turret Simulation/ Sim Values/ Past limit positive Side", (Math.toDegrees(motor.getAngularPositionRad()) + positiveAngle) > 480);
+        SmartDashboard.putBoolean("Turret Simulation/ Sim Values/ Past limit negative Side", (Math.toDegrees(motor.getAngularPositionRad()) + negativeAngle) < -480);
     }
 }

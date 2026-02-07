@@ -17,18 +17,18 @@ public class Sim extends SubsystemBase {
     }
 
     public enum State { 
-        TOTARGET(() -> randomAngle, 1, 3), //Speed is multiplier on voltage, either on or off
-        STOP(() -> 0, 0, -3); //speed values are good as they are imo 
+        TOTARGET(() -> randomAngle, 1), //Speed is multiplier on voltage, either on or off
+        STOP(() -> 0, 0); //speed values are good as they are imo 
         //TODO: stop while debugging was being used to go backwards
         
         Supplier<Integer> angle;
         int speed;
-        int voltage;
+        
 
-        private State(Supplier<Integer> angle, int speed, int voltage) {
+        private State(Supplier<Integer> angle, int speed) {
             this.angle = angle;
             this.speed = speed;
-            this.voltage = voltage;
+            
         }
 
         public Supplier<Integer> getAngle() {
@@ -37,10 +37,6 @@ public class Sim extends SubsystemBase {
 
         public int getSpeed() {
             return speed;
-        }
-
-        public int getVoltage() {
-            return voltage;
         }
     }
 

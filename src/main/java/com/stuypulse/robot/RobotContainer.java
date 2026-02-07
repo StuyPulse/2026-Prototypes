@@ -53,7 +53,6 @@ public class RobotContainer {
         driver.getBottomButton().onTrue(new SetRandomAngle()); 
         //not the best for controlling but i just need this to work for wrapping 
         driver.getTopButton().whileTrue(new SetState(State.TOTARGET));
-        driver.getBottomButton().whileTrue(new SetState(State.STOP));
     }
 
     /**************/
