@@ -16,9 +16,9 @@ public class Sim extends SubsystemBase {
         return instance;
     }
 
-    public enum State { //UPDATE ANGLE TO BE THE RANDOM ANGLE
-        TOTARGET(() -> randomAngle, 1), //TODO: make it be random and have this value change via command. SPEED SHOULD BE MUTLIPLIED BY VOLTAGE!!
-        STOP(() -> 0, 0); //TODO: speed values are good as they are
+    public enum State { 
+        TOTARGET(() -> randomAngle, 1), //Speed is multiplier on voltage, either on or off
+        STOP(() -> 0, 0); //speed values are good as they are imo
         
         Supplier<Integer> angle;
         int speed;
@@ -35,7 +35,6 @@ public class Sim extends SubsystemBase {
         public int getSpeed() {
             return speed;
         }
-        //TODO: if command stuff doesn't work out, make a set speed and etc...
     }
 
     private State state;
