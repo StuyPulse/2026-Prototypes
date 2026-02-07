@@ -5,14 +5,14 @@ import com.stuypulse.robot.subsystems.Sim.State;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class SetStateToTarget extends InstantCommand {
+public class SetState extends InstantCommand {
     public final Sim sim;
     public State state;
 
-    public SetStateToTarget() {
+    public SetState(State state) {
         sim = Sim.getInstance();
 
-        state = State.TOTARGET;
+        this.state = state;
 
         addRequirements(sim);
     }

@@ -6,10 +6,11 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.SetRandomAngle;
-import com.stuypulse.robot.commands.SetStateToTarget;
+import com.stuypulse.robot.commands.SetState;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.Sim;
+import com.stuypulse.robot.subsystems.Sim.State;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
@@ -49,8 +50,10 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        driver.getBottomButton().onTrue(new SetRandomAngle());
-        driver.getTopButton().onTrue(new SetStateToTarget());
+        driver.getBottomButton().onTrue(new SetRandomAngle()); 
+        //not the best for controlling but i just need this to work for wrapping 
+        driver.getTopButton().whileTrue(new SetState(State.TOTARGET));
+        driver.getBottomButton().whileTrue(new SetState(State.STOP));
     }
 
     /**************/
