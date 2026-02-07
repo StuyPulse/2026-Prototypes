@@ -5,8 +5,11 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.SetRandomAngle;
+import com.stuypulse.robot.commands.SetStateToTarget;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.subsystems.Sim;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
@@ -21,7 +24,7 @@ public class RobotContainer {
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
     
     // Subsystem
-
+    public final Sim sim = Sim.getInstance();
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -37,13 +40,18 @@ public class RobotContainer {
     /*** DEFAULTS ***/
     /****************/
 
-    private void configureDefaultCommands() {}
+    private void configureDefaultCommands() {
+        //new SetStateToTarget();
+    }
 
     /***************/
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+        driver.getBottomButton().onTrue(new SetRandomAngle());
+        driver.getTopButton().onTrue(new SetStateToTarget());
+    }
 
     /**************/
     /*** AUTONS ***/
